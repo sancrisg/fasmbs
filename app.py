@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import requests
 
@@ -13,14 +13,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-
 TOKEN = "6322284639:AAFJI2SDBmlsbFJEGsFap6bJeR6w0b929iQ"
 
-@app.get("/enviar_mensaje/{chat_id}/{mensaje}")
+@app.get("/enviar_mensaje/")
 async def enviar_mensaje(chat_id: str, mensaje: str):
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
-    params = {"chat_id": ("-"+chat_id), "text": mensaje}
+    params = {"chat_id": chat_id, "text": mensaje}
     response = requests.get(url, params=params)
     if response.status_code != 200:
         raise HTTPException(status_code=500, detail="Error al enviar el mensaje a Telegram")
